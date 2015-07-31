@@ -1,0 +1,5 @@
+---
+- hosts: bergamot
+  user: root
+  roles:
+  - bergamot
