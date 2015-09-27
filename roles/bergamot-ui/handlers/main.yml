@@ -1,0 +1,5 @@
+---
+# Bergamot notification handlers
+
+- name: restart bergamot-ui
+  service: name=bergamot-ui@default state=restarted

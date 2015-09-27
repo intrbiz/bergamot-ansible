@@ -1,0 +1,63 @@
+---
+#
+# Deploy Bergamot Monitoring UI
+#
+
+- name: Install Bergamot UI
+  zypper: name={{ item }} state=present
+  tags: bergamot
+  with_items:
+   - nginx
+   - bergamot-java
+   - bergamot-cli
+   - bergamot-ui
+
+#
+# Deploy Bergamot configuration files
+#
+
+#
+# Use the admin CLI to create us a site
+#
+
+- name: Create Default Site
+  command: bergamot-cli admin create-site 'bergamot.local' 'Local Bergamot Instance' 'bergamot'
+  args:
+    creates: /etc/bergamot/config/bergamot.local
+
+#
+# Configure Nginx for the UI
+#
+
+- name: Configure Bergamot VHost
+  template: src=bergamot.conf.j2 dest=/etc/nginx/vhosts.d/bergamot.conf
+  tags: bergamot
+  notify: restart nginx
+
+#- name: Deploy Bergamot TLS Key
+#  copy: src=ssl.key/demo.bergamot-monitoring.org.key dest=/etc/nginx/ssl.key/demo.bergamot-monitoring.org.key owner=root group=root mode=0400
+#  tags: bergamot
+#  notify: restart nginx
+#
+#- name: Deploy Bergamot TLS DH Params
+#  copy: src=ssl.key/bergamot_dh2048params.pem dest=/etc/nginx/ssl.key/bergamot_dh2048params.pem owner=root group=root mode=0400
+#  tags: bergamot
+#  notify: restart nginx
+#
+#- name: Deploy Bergamot TLS Certificate
+#  copy: src=ssl.crt/demo.bergamot-monitoring.org_bundle.crt dest=/etc/nginx/ssl.crt/demo.bergamot-monitoring.org_bundle.crt owner=root group=root mode=0400
+#  tags: bergamot
+#  notify: restart nginx
+
+#
+# Start Bergamot
+#
+
+- name: Enable Bergamot UI Server
+  service: name=bergamot-ui@default state=started enabled=yes
+  tags: bergamot
+
+- name: Enable Nginx
+  service: name=nginx state=started enabled=yes
+  tags: bergamot
+

@@ -1,0 +1,12 @@
+---
+#
+# Bergamot Monitoring Common Tasks
+#
+
+- name: Install Bergamot Repository
+  zypper_repository: repo='http://obs.intrbiz.net:82/Bergamot/openSUSE_13.1/Bergamot.repo' state=present
+  tags: bergamot
+
+- name: Install Bergamot Repository Keys
+  command: zypper --gpg-auto-import-keys -q ref
+  tags: bergamot

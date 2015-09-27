@@ -1,0 +1,38 @@
+---
+#
+# Deploy PostgreSQL
+#
+
+- name: Install PostgreSQL Repository
+  zypper_repository: repo='http://download.opensuse.org/repositories/server:/database:/postgresql/openSUSE_13.1/server:database:postgresql.repo' state=present
+  tags: postgresql
+
+- name: Install PostgreSQL Repository Keys
+  command: zypper --gpg-auto-import-keys -q ref
+  tags: postgresql
+
+- name: Install PostgreSQL
+  zypper: name={{ item }} state=present
+  tags: postgresql
+  with_items:
+   - postgresql93
+   - postgresql93-server
+   - postgresql93-contrib
+
+- name: Enable PostgreSQL Server
+  service: name=postgresql state=started enabled=yes
+  tags: postgresql
+
+- name: Configure PostgreSQL HBA
+  template: src=postgresql/pg_hba.conf.j2 dest=/var/lib/pgsql/data/pg_hba.conf
+  tags: postgresql
+  notify: restart postgresql
+
+- name: Configure PostgreSQL
+  template: src=postgresql/postgresql.conf.j2 dest=/var/lib/pgsql/data/postgresql.conf
+  tags: postgresql
+  notify: restart postgresql
+
+- name: Restart PostgreSQL Server
+  service: name=postgresql state=restarted
+  tags: postgresql

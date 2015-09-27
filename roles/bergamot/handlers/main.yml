@@ -1,8 +1,0 @@
----
-# Bergamot notification handlers
-
-- name: restart nginx
-  service: name=nginx state=restarted
-
-- name: restart postgresql
-  service: name=postgresql state=restarted

@@ -1,0 +1,11 @@
+---
+#
+# Ansible PreReqs
+#
+
+- name: Install Ansible PreReqs
+  zypper: name={{ item }} state=present
+  tags: common
+  with_items:
+   - python-xml
+   - python-psycopg2

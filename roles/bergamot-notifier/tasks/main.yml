@@ -1,0 +1,35 @@
+---
+#
+# Deploy Bergamot Monitoring Notifiers
+#
+
+- name: Install Bergamot Monitoring Notifiers
+  zypper: name={{ item }} state=present
+  tags: bergamot
+  with_items:
+   - bergamot-java
+   - bergamot-notifier-email
+   - bergamot-notifier-sms
+   - bergamot-notifier-webhook
+
+#
+# Deploy Bergamot configuration files
+#
+
+#
+# Start Bergamot
+#
+
+- name: Enable Bergamot Email Notifier Server
+  service: name=bergamot-notifier-email state=started enabled=yes
+  tags: bergamot
+
+- name: Enable Bergamot SMS Notifier Server
+  service: name=bergamot-notifier-sms state=started enabled=yes
+  tags: bergamot
+
+
+- name: Enable Bergamot WebHook Notifier Server
+  service: name=bergamot-notifier-webhook state=started enabled=yes
+  tags: bergamot
+

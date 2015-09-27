@@ -1,0 +1,37 @@
+---
+#
+# Deploy RabbitMQ Server
+#
+
+- name: Install RabbitMQ Server
+  zypper: name={{ item }} state=present
+  tags: bergamot
+  with_items:
+   - rabbitmq-server
+   - rabbitmq-server-plugins
+
+- name: Enable RabbitMQ Management
+  command: rabbitmq-plugins enable rabbitmq_management
+  
+- name: Enable RabbitMQ Server
+  service: name=rabbitmq-server state=started enabled=yes
+
+- name: Check RabbitMQ Admin User
+  command: rabbitmqctl list_users
+  register: rabbitmq_admin_user
+
+- name: Create RabbitMQ Admin User
+  command: rabbitmqctl add_user admin abc123
+  when: rabbitmq_admin_user.stdout.find('admin') == -1
+  
+- name: Setup RabbitMQ Admin User Tags
+  command: rabbitmqctl set_user_tags admin administrator
+  when: rabbitmq_admin_user.stdout.find('admin') == -1
+  
+- name: Setup RabbitMQ Admin User Permissions
+  command: rabbitmqctl set_permissions -p / admin '.*' '.*' '.*'
+  when: rabbitmq_admin_user.stdout.find('admin') == -1
+
+- name: Remove RabbitMQ Guest User
+  command: rabbitmqctl delete_user guest
+  when: rabbitmq_admin_user.stdout.find('guest') != -1

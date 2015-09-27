@@ -1,0 +1,32 @@
+---
+#
+# Bergamot Monitoring Datastore
+#
+
+#
+# RabbitMQ User
+#
+
+- name: Create RabbitMQ Bergamot User
+  command: rabbitmqctl add_user bergamot bergamot
+  when: rabbitmq_admin_user.stdout.find('bergamot') == -1
+
+- name: Create RabbitMQ Bergamot User
+  command: rabbitmqctl set_permissions -p / bergamot '.*' '.*' '.*'
+  when: rabbitmq_admin_user.stdout.find('bergamot') == -1
+
+#
+# PostgreSQL User
+#
+
+- name: Create PostgreSQL Bergamot User
+  postgresql_user: name=bergamot state=present
+  tags: postgresql
+
+#
+# PostgreSQL Database
+#
+
+- name: Create PostgreSQL Bergamot Database
+  postgresql_db: name=bergamot owner=bergamot encoding=UTF8 state=present
+  tags: postgresql

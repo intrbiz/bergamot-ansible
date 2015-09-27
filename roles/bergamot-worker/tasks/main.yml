@@ -1,0 +1,50 @@
+---
+#
+# Deploy Bergamot Monitoring Workers
+#
+
+- name: Install Bergamot Workers
+  zypper: name={{ item }} state=present disable_recommends=yes
+  tags: bergamot
+  with_items:
+   - nagios-plugins-all
+   - bergamot-java
+   - bergamot-worker-nagios
+   - bergamot-worker-snmp
+   - bergamot-worker-http
+   - bergamot-worker-agent
+   - bergamot-worker-dummy
+   - bergamot-worker-jdbc
+
+#
+# Deploy Bergamot configuration files
+#
+
+#
+# Start Bergamot
+#
+
+- name: Enable Bergamot Nagios Worker Server
+  service: name=bergamot-worker-nagios state=started enabled=yes
+  tags: bergamot
+
+- name: Enable Bergamot SNMP Worker Server
+  service: name=bergamot-worker-snmp state=started enabled=yes
+  tags: bergamot
+
+- name: Enable Bergamot HTTP Worker Server
+  service: name=bergamot-worker-http state=started enabled=yes
+  tags: bergamot
+
+- name: Enable Bergamot Agent Worker Server
+  service: name=bergamot-worker-agent state=started enabled=yes
+  tags: bergamot
+
+- name: Enable Bergamot Dummy Worker Server
+  service: name=bergamot-worker-dummy state=started enabled=yes
+  tags: bergamot
+
+- name: Enable Bergamot JDBC Worker Server
+  service: name=bergamot-worker-jdbc state=started enabled=yes
+  tags: bergamot
+

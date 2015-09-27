@@ -1,0 +1,20 @@
+---
+#
+# Deploy Bergamot Monitoring Agent Manager
+#
+
+- name: Install Bergamot UI
+  zypper: name={{ item }} state=present
+  tags: bergamot
+  with_items:
+   - bergamot-java
+   - bergamot-agent-manager
+
+#
+# Start Bergamot
+#
+
+- name: Enable Bergamot Agent Manager Server
+  service: name=bergamot-agent-manager state=started enabled=yes
+  tags: bergamot
+
