@@ -11,4 +11,54 @@
   - bergamot-notifier
   - bergamot-worker
   - bergamot-ui
-  
+
+- hosts: bergamot-agent-manager
+  user: root
+  roles:
+  - common
+  - bergamot-common
+  - bergamot-agent-manager
+
+- hosts: bergamot-data
+  user: root
+  roles:
+  - common
+  - bergamot-common
+  - postgresql93
+  - rabbitmq
+  - bergamot-data
+
+- hosts: bergamot-core
+  user: root
+  roles:
+  - common
+  - bergamot-common
+  - postgresql93
+  - rabbitmq
+  - bergamot-data
+  - bergamot-notifier
+  - bergamot-ui
+
+- hosts: bergamot-ui
+  user: root
+  roles:
+  - common
+  - bergamot-common
+  - postgresql93
+  - rabbitmq
+  - bergamot-data
+  - bergamot-ui
+
+- hosts: bergamot-notifier
+  user: root
+  roles:
+  - common
+  - bergamot-common
+  - bergamot-notifier
+
+- hosts: bergamot-worker
+  user: root
+  roles:
+  - common
+  - bergamot-common
+  - bergamot-worker
